@@ -1,7 +1,5 @@
 package com.example.swchallenge.data.remote
 
-import com.example.swchallenge.core.Constants.BREEDS_PATH
-import com.example.swchallenge.core.Constants.SEARCH_PATH
 import com.example.swchallenge.data.remote.models.CatBreedDto
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,5 +10,14 @@ interface CatsApiService {
     suspend fun fetchCatBreeds() : List<CatBreedDto>
 
     @GET(SEARCH_PATH)
-    suspend fun fetchBreedsByName(@Query("name") name: String) : List<CatBreedDto>
+    suspend fun fetchCatBreedsByName(@Query("name") name: String) : List<CatBreedDto>
+
+    companion object {
+        const val API_URL = "https://api.thecatapi.com/"
+        const val BREEDS_PATH = "v1/breeds"
+        const val SEARCH_PATH = "v1/breeds/search"
+
+        const val IMAGE_PATH = "https://cdn2.thecatapi.com/images/"
+        const val IMAGE_FORMAT = ".jpg"
+    }
 }

@@ -1,8 +1,6 @@
 package com.example.swchallenge.di
 
-import com.example.swchallenge.core.Constants.API_URL
 import com.example.swchallenge.data.remote.CatsApiService
-import com.example.swchallenge.data.remote.CatsApiServiceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object NetworkModule {
 
     @Provides
     @Singleton
@@ -33,14 +31,9 @@ object AppModule {
     @Singleton
     fun provideCatsApiService(converterFactory : Converter.Factory): CatsApiService {
         return Retrofit.Builder()
-            .baseUrl(API_URL)
+            .baseUrl(CatsApiService.API_URL)
             .addConverterFactory(converterFactory)
             .build()
             .create(CatsApiService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideCatsApiServiceImpl(catsApiService: CatsApiService) = CatsApiServiceImpl(catsApiService)
-
 }

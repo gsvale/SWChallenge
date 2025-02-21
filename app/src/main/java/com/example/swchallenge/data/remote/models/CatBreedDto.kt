@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CatBreedDto(
+    @SerialName("id") val id: String,
     @SerialName("name") val name: String,
     @SerialName("life_span") val lifeSpan: String,
     @SerialName("origin") val origin: String,
