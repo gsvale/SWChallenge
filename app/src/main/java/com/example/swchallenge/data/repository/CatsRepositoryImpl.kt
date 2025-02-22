@@ -8,6 +8,4 @@ import javax.inject.Inject
 class CatsRepositoryImpl @Inject constructor(
     private val catsDao: CatsDao,
     private val catsApiService: CatsApiService
-) : CatsRepository {
-
-}
+) : CatsRepository

@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "cats")
-data class CatBreedEntity(
+@Entity
+data class CatBreedUpsertEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: String,
@@ -14,7 +14,5 @@ data class CatBreedEntity(
     val origin: String,
     val temperament: String,
     val description: String,
-    val imageId: String,
-    @ColumnInfo(defaultValue = "false")
-    var isFavourite: Boolean
+    val imageId: String
 )

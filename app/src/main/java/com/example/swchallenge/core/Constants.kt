@@ -1,4 +1,3 @@
 package com.example.swchallenge.core
 
-object Constants {
-}
+object Constants
