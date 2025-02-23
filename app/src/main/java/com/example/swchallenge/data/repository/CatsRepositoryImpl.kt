@@ -33,4 +33,9 @@ class CatsRepositoryImpl @Inject constructor(
         emit(savedCatBreeds.toCatBreeds())
     }.flowOn(ioDispatcher)
 
+    override fun getFavouriteCats(): Flow<List<CatBreed>> = flow {
+        val savedCatBreeds = catsDao.getFavouriteCatsBreeds()
+        emit(savedCatBreeds.toCatBreeds())
+    }.flowOn(ioDispatcher)
+
 }

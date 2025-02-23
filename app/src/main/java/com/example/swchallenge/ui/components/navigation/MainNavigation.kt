@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swchallenge.R
+import com.example.swchallenge.presentation.favourites.FavouritesViewModel
 import com.example.swchallenge.presentation.list.CatsListViewModel
 import com.example.swchallenge.presentation.navigation.Screens
 import com.example.swchallenge.ui.components.favourites.FavouritesScreen
@@ -32,7 +33,8 @@ import com.example.swchallenge.ui.components.list.CatsListScreen
 
 @Composable
 fun MainNavigation(
-    catsListViewModel : CatsListViewModel
+    catsListViewModel : CatsListViewModel,
+    favouritesViewModel: FavouritesViewModel
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -94,7 +96,8 @@ fun MainNavigation(
 
             composable(Screens.Favourites.route) {
                 FavouritesScreen(
-                    navController
+                    navController,
+                    favouritesViewModel
                 )
             }
         }
