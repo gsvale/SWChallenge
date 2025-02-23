@@ -1,3 +1,9 @@
 package com.example.swchallenge.domain
 
-interface CatsRepository
+import com.example.swchallenge.domain.models.CatBreed
+import kotlinx.coroutines.flow.Flow
+
+interface CatsRepository {
+    fun getAllCats(): Flow<List<CatBreed>>
+    fun getCatsByName(query: String): Flow<List<CatBreed>>
+}

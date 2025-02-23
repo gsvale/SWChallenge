@@ -16,6 +16,9 @@ interface CatsDao {
     @Query("SELECT * FROM cats ORDER BY id DESC")
     fun getAllCatsBreeds() : List<CatBreedEntity>
 
+    @Query("SELECT * FROM cats WHERE name LIKE '%' || :query || '%' ORDER BY id DESC")
+    fun getAllCatsByName(query: String) : List<CatBreedEntity>
+
     @Update
     fun updateCatBreed(catBreedEntity: CatBreedEntity)
 
