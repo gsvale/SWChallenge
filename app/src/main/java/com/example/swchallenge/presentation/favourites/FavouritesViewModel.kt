@@ -1,5 +1,7 @@
 package com.example.swchallenge.presentation.favourites
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.swchallenge.domain.models.CatBreed
@@ -21,6 +23,9 @@ class FavouritesViewModel @Inject constructor(
     private val _favouritesList : MutableStateFlow<List<CatBreed>> = MutableStateFlow(emptyList())
     val favouritesList: StateFlow<List<CatBreed>> = _favouritesList.asStateFlow()
 
+    private val _averageLifeSpan = mutableStateOf("")
+    val averageLifeSpan: State<String> = _averageLifeSpan
+
     init {
         loadFavourites()
     }
@@ -29,7 +34,24 @@ class FavouritesViewModel @Inject constructor(
         viewModelScope.launch {
             useCase.getFavouriteCats().collect{
                 _favouritesList.value = it
+                updateAverageLifeSpan()
             }
+        }
+    }
+
+    private fun updateAverageLifeSpan(){
+        val favouritesList = _favouritesList.value
+        if(favouritesList.isNotEmpty()){
+            var averageLifeSpanValue = 0
+            for(item in favouritesList){
+                var itemLifeSpan = item.lifeSpan
+                itemLifeSpan = itemLifeSpan.replace(" ", "")
+                val itemLifeSpanValues = itemLifeSpan.split("-")
+                averageLifeSpanValue += itemLifeSpanValues[1].toInt()
+            }
+            _averageLifeSpan.value = (averageLifeSpanValue / favouritesList.size).toString()
+        } else{
+            _averageLifeSpan.value = ""
         }
     }
 

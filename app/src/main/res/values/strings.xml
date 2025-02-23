@@ -4,5 +4,5 @@
     <string name="search_label">Search</string>
     <string name="favourites_label">Favourites</string>
     <string name="cats_list_label">Cats list</string>
-    <string name="average_life_span_label">Average Life Span:</string>
+    <string name="average_life_span_label">Average Life Span:   %1$s</string>
 </resources>

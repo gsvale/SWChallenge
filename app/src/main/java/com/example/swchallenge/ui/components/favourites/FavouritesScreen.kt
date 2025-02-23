@@ -45,7 +45,7 @@ fun FavouritesScreen(navController: NavController, viewModel: FavouritesViewMode
         )
 
         Text(
-            stringResource(R.string.average_life_span_label),
+            stringResource(R.string.average_life_span_label, viewModel.averageLifeSpan.value),
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier.constrainAs(averageLifeSpanRef) {
