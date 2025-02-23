@@ -15,14 +15,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.swchallenge.R
+import com.example.swchallenge.domain.models.CatBreed
 import com.example.swchallenge.presentation.list.CatsListViewModel
 import com.example.swchallenge.ui.components.item.CatItem
 
 
 @Composable
-fun CatsListScreen(navController: NavController, viewModel : CatsListViewModel){
+fun CatsListScreen(viewModel : CatsListViewModel, onItemClick : (CatBreed) -> Unit){
 
    val catsList = viewModel.catsList.collectAsStateWithLifecycle().value
 
@@ -77,7 +77,8 @@ fun CatsListScreen(navController: NavController, viewModel : CatsListViewModel){
          items(catsList.size) { item ->
             CatItem(
                catsList[item],
-               onClickFavourite = { viewModel.updateFavourite(it) }
+               onClickFavourite = { viewModel.updateFavourite(it) },
+               onClickItem = { onItemClick(it)}
             )
          }
       }

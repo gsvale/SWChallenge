@@ -24,9 +24,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swchallenge.R
+import com.example.swchallenge.domain.models.CatBreed
+import com.example.swchallenge.presentation.detail.CatDetailViewModel
 import com.example.swchallenge.presentation.favourites.FavouritesViewModel
 import com.example.swchallenge.presentation.list.CatsListViewModel
 import com.example.swchallenge.presentation.navigation.Screens
+import com.example.swchallenge.ui.components.detail.CatDetailScreen
 import com.example.swchallenge.ui.components.favourites.FavouritesScreen
 import com.example.swchallenge.ui.components.list.CatsListScreen
 
@@ -34,50 +37,54 @@ import com.example.swchallenge.ui.components.list.CatsListScreen
 @Composable
 fun MainNavigation(
     catsListViewModel : CatsListViewModel,
-    favouritesViewModel: FavouritesViewModel
+    favouritesViewModel: FavouritesViewModel,
+    catDetailViewModel: CatDetailViewModel
 ) {
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val previousBackStackEntry = navController.previousBackStackEntry
+    val currentDestination = currentBackStackEntry?.destination
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar(modifier = Modifier.height(IntrinsicSize.Min)) {
-                NavigationBarItem(
-                    selected = currentDestination?.route == Screens.CatList.route,
-                    label = { Text(stringResource(R.string.cats_list_label), fontSize = 15.sp, fontWeight = FontWeight.Bold) },
-                    icon = {},
-                    onClick = {
-                        navController.navigate(Screens.CatList.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+            if(currentDestination?.route != Screens.Detail.route){
+                NavigationBar(modifier = Modifier.height(IntrinsicSize.Min)) {
+                    NavigationBarItem(
+                        selected = currentDestination?.route == Screens.CatList.route,
+                        label = { Text(stringResource(R.string.cats_list_label), fontSize = 15.sp, fontWeight = FontWeight.Bold) },
+                        icon = {},
+                        onClick = {
+                            navController.navigate(Screens.CatList.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
-                VerticalDivider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(2.dp)
-                        .padding(top = 20.dp, bottom = 20.dp)
-                )
-                NavigationBarItem(
-                    selected = currentDestination?.route == Screens.Favourites.route,
-                    label = { Text(stringResource(R.string.favourites_label), fontSize = 15.sp, fontWeight = FontWeight.Bold) },
-                    icon = {},
-                    onClick = {
-                        navController.navigate(Screens.Favourites.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                    )
+                    VerticalDivider(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(2.dp)
+                            .padding(top = 20.dp, bottom = 20.dp)
+                    )
+                    NavigationBarItem(
+                        selected = currentDestination?.route == Screens.Favourites.route,
+                        label = { Text(stringResource(R.string.favourites_label), fontSize = 15.sp, fontWeight = FontWeight.Bold) },
+                        icon = {},
+                        onClick = {
+                            navController.navigate(Screens.Favourites.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -89,16 +96,30 @@ fun MainNavigation(
 
             composable(Screens.CatList.route) {
                 CatsListScreen(
-                    navController,
                     catsListViewModel
-                )
+                ) {
+                    currentBackStackEntry?.savedStateHandle?.set("CatBreed", it)
+                    navController.navigate(Screens.Detail.route)
+                }
             }
 
             composable(Screens.Favourites.route) {
                 FavouritesScreen(
-                    navController,
                     favouritesViewModel
-                )
+                ) {
+                    currentBackStackEntry?.savedStateHandle?.set("CatBreed", it)
+                    navController.navigate(Screens.Detail.route)
+                }
+            }
+
+            composable(Screens.Detail.route) {
+                val catBreed = previousBackStackEntry?.savedStateHandle?.get<CatBreed>("CatBreed")
+                catBreed?.let {
+                    CatDetailScreen(
+                        it,
+                        catDetailViewModel
+                    )
+                }
             }
         }
     }

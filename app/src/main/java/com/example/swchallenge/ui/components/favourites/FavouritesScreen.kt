@@ -14,13 +14,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.swchallenge.R
+import com.example.swchallenge.domain.models.CatBreed
 import com.example.swchallenge.presentation.favourites.FavouritesViewModel
 import com.example.swchallenge.ui.components.item.CatItem
 
 @Composable
-fun FavouritesScreen(navController: NavController, viewModel: FavouritesViewModel) {
+fun FavouritesScreen(viewModel: FavouritesViewModel, onItemClick : (CatBreed) -> Unit) {
 
     val favouritesList = viewModel.favouritesList.collectAsStateWithLifecycle().value
 
@@ -72,7 +72,9 @@ fun FavouritesScreen(navController: NavController, viewModel: FavouritesViewMode
             items(favouritesList.size) { item ->
                 CatItem(
                     favouritesList[item],
-                    onClickFavourite = { viewModel.updateFavourite(it) })
+                    onClickFavourite = { viewModel.updateFavourite(it) },
+                    onClickItem = { onItemClick(it)}
+                )
             }
         }
     }

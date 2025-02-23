@@ -1,5 +1,6 @@
 package com.example.swchallenge.ui.components.item
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -21,10 +22,13 @@ import com.example.swchallenge.domain.models.CatBreed
 @Composable
 fun CatItem(
     catBreed: CatBreed,
-    onClickFavourite: (CatBreed) -> Unit) {
+    onClickFavourite: (CatBreed) -> Unit,
+    onClickItem: (CatBreed) -> Unit
+) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClickItem(catBreed) }
     ) {
 
         val (imageRef, nameRef, favouriteRef) = createRefs()
