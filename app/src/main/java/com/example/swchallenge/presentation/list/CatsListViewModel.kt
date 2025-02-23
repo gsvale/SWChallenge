@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.swchallenge.domain.models.CatBreed
 import com.example.swchallenge.domain.usecase.GetCatsUseCase
+import com.example.swchallenge.domain.usecase.UpdateFavouriteCatUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class CatsListViewModel @Inject constructor(private val useCase: GetCatsUseCase) : ViewModel() {
+class CatsListViewModel @Inject constructor(
+    private val getCatsUseCase: GetCatsUseCase,
+    private val updateFavouriteCatUseCase : UpdateFavouriteCatUseCase
+) : ViewModel() {
 
     private val _searchQuery = mutableStateOf("")
     val searchQuery: State<String> = _searchQuery
@@ -32,7 +36,7 @@ class CatsListViewModel @Inject constructor(private val useCase: GetCatsUseCase)
 
     private fun loadCats() {
         viewModelScope.launch {
-            useCase.getAllCats().collect{
+            getCatsUseCase.getAllCats().collect{
                 _catsList.value = it
             }
         }
@@ -43,12 +47,18 @@ class CatsListViewModel @Inject constructor(private val useCase: GetCatsUseCase)
         searchJob?.cancel()
         if(query.isNotEmpty()){
             searchJob = viewModelScope.launch {
-                useCase.getCatsByName(query).collect{
+                getCatsUseCase.getCatsByName(query).collect{
                     _catsList.value = it
                 }
             }
         } else{
             loadCats()
+        }
+    }
+
+    fun updateFavourite(catBreed: CatBreed){
+        viewModelScope.launch {
+            updateFavouriteCatUseCase.updateFavourite(catBreed)
         }
     }
 }

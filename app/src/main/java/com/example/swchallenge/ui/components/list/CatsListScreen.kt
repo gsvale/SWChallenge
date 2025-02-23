@@ -75,7 +75,10 @@ fun CatsListScreen(navController: NavController, viewModel : CatsListViewModel){
          }
       ) {
          items(catsList.size) { item ->
-            CatItem(catsList[item])
+            CatItem(
+               catsList[item],
+               onClickFavourite = { viewModel.updateFavourite(it) }
+            )
          }
       }
    }

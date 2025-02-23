@@ -5,6 +5,7 @@ import com.example.swchallenge.data.remote.CatsApiService
 import com.example.swchallenge.di.IODispatcher
 import com.example.swchallenge.domain.CatsRepository
 import com.example.swchallenge.domain.models.CatBreed
+import com.example.swchallenge.domain.toCatBreedEntity
 import com.example.swchallenge.domain.toCatBreedUpsertEntities
 import com.example.swchallenge.domain.toCatBreeds
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,19 +24,29 @@ class CatsRepositoryImpl @Inject constructor(
         val fetchedCatBreeds = catsApiService.fetchCatBreeds()
         catsDao.insertCatBreed(*fetchedCatBreeds.toCatBreedUpsertEntities())
         val savedCatBreeds = catsDao.getAllCatsBreeds()
-        emit(savedCatBreeds.toCatBreeds())
+        savedCatBreeds.collect{
+            emit(it.toCatBreeds())
+        }
     }.flowOn(ioDispatcher)
 
     override fun getCatsByName(query: String): Flow<List<CatBreed>> = flow {
         val fetchedCatBreeds = catsApiService.fetchCatBreedsByName(query)
         catsDao.insertCatBreed(*fetchedCatBreeds.toCatBreedUpsertEntities())
         val savedCatBreeds = catsDao.getAllCatsByName(query)
-        emit(savedCatBreeds.toCatBreeds())
+        savedCatBreeds.collect{
+            emit(it.toCatBreeds())
+        }
     }.flowOn(ioDispatcher)
 
     override fun getFavouriteCats(): Flow<List<CatBreed>> = flow {
         val savedCatBreeds = catsDao.getFavouriteCatsBreeds()
-        emit(savedCatBreeds.toCatBreeds())
+        savedCatBreeds.collect{
+            emit(it.toCatBreeds())
+        }
     }.flowOn(ioDispatcher)
 
+    override suspend fun updateFavourite(catBreed: CatBreed) {
+        val catBreedEntity = catBreed.toCatBreedEntity()
+        catsDao.updateCatBreed(catBreedEntity)
+    }
 }

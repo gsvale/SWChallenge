@@ -33,3 +33,16 @@ fun List<CatBreedEntity>.toCatBreeds(): List<CatBreed> {
         )
     }
 }
+
+fun CatBreed.toCatBreedEntity() : CatBreedEntity {
+    return CatBreedEntity(
+        id = this.id,
+        name = this.name,
+        lifeSpan = this.lifeSpan,
+        origin = this.origin,
+        temperament = this.temperament,
+        description = this.description,
+        imageId = this.imageId,
+        isFavourite = !this.isFavourite
+    )
+}

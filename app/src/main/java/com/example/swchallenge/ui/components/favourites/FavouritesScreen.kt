@@ -70,7 +70,9 @@ fun FavouritesScreen(navController: NavController, viewModel: FavouritesViewMode
             }
         ) {
             items(favouritesList.size) { item ->
-                CatItem(favouritesList[item])
+                CatItem(
+                    favouritesList[item],
+                    onClickFavourite = { viewModel.updateFavourite(it) })
             }
         }
     }

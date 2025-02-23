@@ -6,22 +6,23 @@ import androidx.room.Update
 import androidx.room.Upsert
 import com.example.swchallenge.data.database.models.CatBreedEntity
 import com.example.swchallenge.data.database.models.CatBreedUpsertEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CatsDao {
 
     @Upsert(entity = CatBreedEntity::class)
-    fun insertCatBreed(vararg catBreedUpsertEntity: CatBreedUpsertEntity)
+    suspend fun insertCatBreed(vararg catBreedUpsertEntity: CatBreedUpsertEntity)
 
     @Query("SELECT * FROM cats ORDER BY id DESC")
-    fun getAllCatsBreeds() : List<CatBreedEntity>
+    fun getAllCatsBreeds() : Flow<List<CatBreedEntity>>
 
     @Query("SELECT * FROM cats WHERE name LIKE '%' || :query || '%' ORDER BY id DESC")
-    fun getAllCatsByName(query: String) : List<CatBreedEntity>
+    fun getAllCatsByName(query: String) : Flow<List<CatBreedEntity>>
 
     @Update
-    fun updateCatBreed(catBreedEntity: CatBreedEntity)
+    suspend fun updateCatBreed(catBreedEntity: CatBreedEntity)
 
     @Query("SELECT * FROM cats WHERE isFavourite = 1 ORDER BY id DESC")
-    fun getFavouriteCatsBreeds() : List<CatBreedEntity>
+    fun getFavouriteCatsBreeds() : Flow<List<CatBreedEntity>>
 }

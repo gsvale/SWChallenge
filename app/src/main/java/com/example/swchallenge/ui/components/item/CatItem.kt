@@ -19,9 +19,13 @@ import com.example.swchallenge.data.remote.CatsApiService
 import com.example.swchallenge.domain.models.CatBreed
 
 @Composable
-fun CatItem(catBreed: CatBreed) {
-    ConstraintLayout(modifier = Modifier
-        .fillMaxWidth()) {
+fun CatItem(
+    catBreed: CatBreed,
+    onClickFavourite: (CatBreed) -> Unit) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
 
         val (imageRef, nameRef, favouriteRef) = createRefs()
 
@@ -39,25 +43,35 @@ fun CatItem(catBreed: CatBreed) {
         )
 
         IconButton(
-            modifier = Modifier.constrainAs(favouriteRef){
+            modifier = Modifier.constrainAs(favouriteRef) {
                 top.linkTo(parent.top)
                 end.linkTo(parent.end)
             },
-            onClick = { }
+            onClick = { onClickFavourite(catBreed) }
         ) {
-            Icon(
-                painter = painterResource(R.drawable.star_outline),
-                null,
-                modifier = Modifier.size(40.dp)
-            )
+            if (catBreed.isFavourite) {
+                Icon(
+                    painter = painterResource(R.drawable.start_filled),
+                    null,
+                    modifier = Modifier.size(40.dp)
+                )
+            } else {
+                Icon(
+                    painter = painterResource(R.drawable.star_outline),
+                    null,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
         }
 
 
         Text(
             catBreed.name,
-            modifier = Modifier.constrainAs(nameRef) {
-                top.linkTo(imageRef.bottom, margin = 5.dp)
-            }.fillMaxWidth(),
+            modifier = Modifier
+                .constrainAs(nameRef) {
+                    top.linkTo(imageRef.bottom, margin = 5.dp)
+                }
+                .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
     }
