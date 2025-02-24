@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +28,8 @@ class CatsListViewModel @Inject constructor(
 
     private var searchJob: Job? = null
 
-    private val _catsList : MutableStateFlow<List<CatBreed>> = MutableStateFlow(emptyList())
-    val catsList: StateFlow<List<CatBreed>> = _catsList.asStateFlow()
+    private val _state = MutableStateFlow(CatsListUiState())
+    val state: StateFlow<CatsListUiState> = _state.asStateFlow()
 
     init {
         loadCats()
@@ -36,8 +37,16 @@ class CatsListViewModel @Inject constructor(
 
     private fun loadCats() {
         viewModelScope.launch {
-            getCatsUseCase.getAllCats().collect{
-                _catsList.value = it
+            _state.update {
+                it.copy(isLoading = true, catsList = emptyList())
+            }
+            getCatsUseCase.getAllCats().collect{ list ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        catsList = list
+                    )
+                }
             }
         }
     }
@@ -47,8 +56,16 @@ class CatsListViewModel @Inject constructor(
         searchJob?.cancel()
         if(query.isNotEmpty()){
             searchJob = viewModelScope.launch {
-                getCatsUseCase.getCatsByName(query).collect{
-                    _catsList.value = it
+                _state.update {
+                    it.copy(isLoading = true, catsList = emptyList())
+                }
+                getCatsUseCase.getCatsByName(query).collect{ list ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            catsList = list
+                        )
+                    }
                 }
             }
         } else{

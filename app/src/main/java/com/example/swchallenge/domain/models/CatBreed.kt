@@ -1,9 +1,6 @@
 package com.example.swchallenge.domain.models
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 data class CatBreed(
     val id: String,
     val name: String,
@@ -13,4 +10,4 @@ data class CatBreed(
     val description: String,
     val imageId: String,
     val isFavourite: Boolean
-) : Parcelable
+)

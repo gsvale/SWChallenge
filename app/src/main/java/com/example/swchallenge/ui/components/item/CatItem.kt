@@ -23,12 +23,12 @@ import com.example.swchallenge.domain.models.CatBreed
 fun CatItem(
     catBreed: CatBreed,
     onClickFavourite: (CatBreed) -> Unit,
-    onClickItem: (CatBreed) -> Unit
+    onClickItem: (String) -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClickItem(catBreed) }
+            .clickable { onClickItem(catBreed.id) }
     ) {
 
         val (imageRef, nameRef, favouriteRef) = createRefs()

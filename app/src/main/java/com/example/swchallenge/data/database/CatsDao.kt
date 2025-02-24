@@ -23,6 +23,9 @@ interface CatsDao {
     @Update
     suspend fun updateCatBreed(catBreedEntity: CatBreedEntity)
 
+    @Query("SELECT * FROM cats Where id = :id")
+    fun getCatBreedById(id: String) : Flow<CatBreedEntity>
+
     @Query("SELECT * FROM cats WHERE isFavourite = 1 ORDER BY id DESC")
     fun getFavouriteCatsBreeds() : Flow<List<CatBreedEntity>>
 }

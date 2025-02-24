@@ -8,4 +8,5 @@ interface CatsRepository {
     fun getCatsByName(query: String): Flow<List<CatBreed>>
     fun getFavouriteCats(): Flow<List<CatBreed>>
     suspend fun updateFavourite(catBreed: CatBreed)
+    fun getCatById(id: String): Flow<CatBreed>
 }

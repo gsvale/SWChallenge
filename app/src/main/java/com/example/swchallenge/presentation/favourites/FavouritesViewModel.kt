@@ -11,17 +11,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FavouritesViewModel @Inject constructor(
-    private val useCase: GetFavouriteCatsUseCase,
+    private val getFavouriteCatsUseCase: GetFavouriteCatsUseCase,
     private val updateFavouriteCatUseCase : UpdateFavouriteCatUseCase
 ) : ViewModel() {
 
-    private val _favouritesList : MutableStateFlow<List<CatBreed>> = MutableStateFlow(emptyList())
-    val favouritesList: StateFlow<List<CatBreed>> = _favouritesList.asStateFlow()
+    private val _state = MutableStateFlow(FavouritesUiState())
+    val state: StateFlow<FavouritesUiState> = _state.asStateFlow()
 
     private val _averageLifeSpan = mutableStateOf("")
     val averageLifeSpan: State<String> = _averageLifeSpan
@@ -32,15 +33,23 @@ class FavouritesViewModel @Inject constructor(
 
     private fun loadFavourites() {
         viewModelScope.launch {
-            useCase.getFavouriteCats().collect{
-                _favouritesList.value = it
+            _state.update {
+                it.copy(isLoading = true, catsList = emptyList())
+            }
+            getFavouriteCatsUseCase.getFavouriteCats().collect{ list ->
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        catsList = list
+                    )
+                }
                 updateAverageLifeSpan()
             }
         }
     }
 
     private fun updateAverageLifeSpan(){
-        val favouritesList = _favouritesList.value
+        val favouritesList = _state.value.catsList
         if(favouritesList.isNotEmpty()){
             var averageLifeSpanValue = 0
             for(item in favouritesList){

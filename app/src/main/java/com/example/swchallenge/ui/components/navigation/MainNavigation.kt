@@ -24,7 +24,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swchallenge.R
-import com.example.swchallenge.domain.models.CatBreed
 import com.example.swchallenge.presentation.detail.CatDetailViewModel
 import com.example.swchallenge.presentation.favourites.FavouritesViewModel
 import com.example.swchallenge.presentation.list.CatsListViewModel
@@ -98,7 +97,7 @@ fun MainNavigation(
                 CatsListScreen(
                     catsListViewModel
                 ) {
-                    currentBackStackEntry?.savedStateHandle?.set("CatBreed", it)
+                    currentBackStackEntry?.savedStateHandle?.set("id", it)
                     navController.navigate(Screens.Detail.route)
                 }
             }
@@ -107,14 +106,14 @@ fun MainNavigation(
                 FavouritesScreen(
                     favouritesViewModel
                 ) {
-                    currentBackStackEntry?.savedStateHandle?.set("CatBreed", it)
+                    currentBackStackEntry?.savedStateHandle?.set("id", it)
                     navController.navigate(Screens.Detail.route)
                 }
             }
 
             composable(Screens.Detail.route) {
-                val catBreed = previousBackStackEntry?.savedStateHandle?.get<CatBreed>("CatBreed")
-                catBreed?.let {
+                val catBreedId = previousBackStackEntry?.savedStateHandle?.get<String>("id")
+                catBreedId?.let {
                     CatDetailScreen(
                         it,
                         catDetailViewModel

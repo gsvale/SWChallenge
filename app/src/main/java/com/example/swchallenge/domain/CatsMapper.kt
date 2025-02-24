@@ -46,3 +46,16 @@ fun CatBreed.toCatBreedEntity() : CatBreedEntity {
         isFavourite = !this.isFavourite
     )
 }
+
+fun CatBreedEntity.toCatBreed() : CatBreed {
+    return CatBreed(
+        id = this.id,
+        name = this.name,
+        lifeSpan = this.lifeSpan,
+        origin = this.origin,
+        temperament = this.temperament,
+        description = this.description,
+        imageId = this.imageId,
+        isFavourite = this.isFavourite
+    )
+}
