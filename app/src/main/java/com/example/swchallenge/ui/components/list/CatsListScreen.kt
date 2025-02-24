@@ -48,44 +48,43 @@ fun CatsListScreen(viewModel: CatsListViewModel, onItemClick: (String) -> Unit) 
                     color = Color.Green
                 )
             }
+            else -> {
+                state.error?.let {
+                    when (it) {
+                        DataError.Network.REQUEST_TIMEOUT -> {
+                            Toast.makeText(
+                                context,
+                                stringResource(R.string.timeout_message_label),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-            state.error != null -> {
-                when (state.error) {
-                    DataError.Network.REQUEST_TIMEOUT -> {
-                        Toast.makeText(
-                            context,
-                            stringResource(R.string.timeout_message_label),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        DataError.Network.NO_INTERNET -> {
+                            Toast.makeText(
+                                context,
+                                stringResource(R.string.no_internet_message_label),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                    DataError.Network.NO_INTERNET -> {
-                        Toast.makeText(
-                            context,
-                            stringResource(R.string.no_internet_message_label),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        DataError.Network.PAYLOAD_TOO_LARGE -> {
+                            Toast.makeText(
+                                context,
+                                stringResource(R.string.payload_too_large_message_label),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                    DataError.Network.PAYLOAD_TOO_LARGE -> {
-                        Toast.makeText(
-                            context,
-                            stringResource(R.string.payload_too_large_message_label),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    DataError.Network.UNKNOWN -> {
-                        Toast.makeText(
-                            context,
-                            stringResource(R.string.unknown_message_label),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        DataError.Network.UNKNOWN -> {
+                            Toast.makeText(
+                                context,
+                                stringResource(R.string.unknown_message_label),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
-            }
 
-            else -> {
                 state.catsList.let { catsList ->
                     val topTitleGuideline = createGuidelineFromTop(0.05f)
                     val startTitleGuideline = createGuidelineFromStart(0.1f)

@@ -50,6 +50,8 @@ fun CatItem(
             modifier = Modifier.constrainAs(favouriteRef) {
                 top.linkTo(parent.top)
                 end.linkTo(parent.end)
+                start.linkTo(parent.end)
+                bottom.linkTo(parent.baseline)
             },
             onClick = { onClickFavourite(catBreed) }
         ) {

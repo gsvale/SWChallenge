@@ -39,7 +39,9 @@ class CatsListViewModel @Inject constructor(
     private fun loadCats() {
         viewModelScope.launch {
             _state.update { it.copy(
-                isSearching = false
+                isSearching = false,
+                isLoading = true,
+                error = null
             ) }
             getCatsUseCase.getAllCats().collect{ result ->
                 if(!_state.value.isSearching){
@@ -54,7 +56,6 @@ class CatsListViewModel @Inject constructor(
                         is Resource.Loading -> {
                             _state.update { it.copy(
                                 isLoading = true,
-                                error = null,
                                 catsList = result.data ?: emptyList()
                             ) }
                         }
@@ -62,7 +63,6 @@ class CatsListViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     isLoading = false,
-                                    error = null,
                                     catsList = result.data ?: emptyList()
                                 )
                             }
@@ -79,7 +79,9 @@ class CatsListViewModel @Inject constructor(
         if(query.isNotEmpty()){
             searchJob = viewModelScope.launch {
                 _state.update { it.copy(
-                    isSearching = true
+                    isSearching = true,
+                    isLoading = false,
+                    error = null
                 ) }
                 getCatsUseCase.getCatsByName(query).collect{ result ->
                     when(result){
