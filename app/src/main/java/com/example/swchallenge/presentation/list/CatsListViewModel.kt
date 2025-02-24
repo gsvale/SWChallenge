@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.swchallenge.core.Resource
 import com.example.swchallenge.domain.models.CatBreed
 import com.example.swchallenge.domain.usecase.GetCatsUseCase
 import com.example.swchallenge.domain.usecase.UpdateFavouriteCatUseCase
@@ -37,15 +38,36 @@ class CatsListViewModel @Inject constructor(
 
     private fun loadCats() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(isLoading = true, catsList = emptyList())
-            }
-            getCatsUseCase.getAllCats().collect{ list ->
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        catsList = list
-                    )
+            _state.update { it.copy(
+                isSearching = false
+            ) }
+            getCatsUseCase.getAllCats().collect{ result ->
+                if(!_state.value.isSearching){
+                    when(result){
+                        is Resource.Error -> {
+                            _state.update { it.copy(
+                                isLoading = false,
+                                error = result.error,
+                                catsList = result.data ?: emptyList()
+                            ) }
+                        }
+                        is Resource.Loading -> {
+                            _state.update { it.copy(
+                                isLoading = true,
+                                error = null,
+                                catsList = result.data ?: emptyList()
+                            ) }
+                        }
+                        is Resource.Success -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    error = null,
+                                    catsList = result.data ?: emptyList()
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -56,15 +78,34 @@ class CatsListViewModel @Inject constructor(
         searchJob?.cancel()
         if(query.isNotEmpty()){
             searchJob = viewModelScope.launch {
-                _state.update {
-                    it.copy(isLoading = true, catsList = emptyList())
-                }
-                getCatsUseCase.getCatsByName(query).collect{ list ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            catsList = list
-                        )
+                _state.update { it.copy(
+                    isSearching = true
+                ) }
+                getCatsUseCase.getCatsByName(query).collect{ result ->
+                    when(result){
+                        is Resource.Error -> {
+                            _state.update { it.copy(
+                                isLoading = false,
+                                error = result.error,
+                                catsList = result.data ?: emptyList()
+                            ) }
+                        }
+                        is Resource.Loading -> {
+                            _state.update { it.copy(
+                                isLoading = true,
+                                error = null,
+                                catsList = result.data ?: emptyList()
+                            ) }
+                        }
+                        is Resource.Success -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    error = null,
+                                    catsList = result.data ?: emptyList()
+                                )
+                            }
+                        }
                     }
                 }
             }

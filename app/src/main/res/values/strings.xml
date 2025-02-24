@@ -8,4 +8,8 @@
     <string name="origin_label">Origin:</string>
     <string name="temperament_label">Temperament:</string>
     <string name="description_label">Description:</string>
+    <string name="timeout_message_label">Service Timeout has reached !</string>
+    <string name="no_internet_message_label">No internet connection !</string>
+    <string name="payload_too_large_message_label">Payload too large!</string>
+    <string name="unknown_message_label">Something went wrong!</string>
 </resources>
